@@ -54,15 +54,19 @@ while not os.path.exists(file_path):
     print("Invalid path. Please input log file path again:")
     file_path = input("> ")
 
+###### create result file for printing
+directory_path = file_path[0:file_path.rfind('/')]
+result_file = open(directory_path + "/results.txt", "w")
+print("Create result file: " + directory_path + "/results.txt")
+
+##### read file content
 file = open(file_path, "r")
 log_lines = file.readlines()
 
-print("------------------results---------------------------")
+original_stdout = sys.stdout
+sys.stdout = result_file
 
 for log_line in log_lines:
-    # log_line = input("> ")
-    # if log_line == 'q':
-    #     break
     result = template_miner.add_log_message(log_line)
     result_json = json.dumps(result)
     print(result_json)
@@ -74,15 +78,21 @@ print("Training done. Mined clusters:")
 for cluster in template_miner.drain.clusters:
     print(cluster)
 
-print(f"Starting inference mode, matching to pre-trained clusters. Input log lines or 'q' to finish")
-while True:
-    log_line = input("> ")
-    if log_line == 'q':
-        break
-    cluster = template_miner.match(log_line)
-    if cluster is None:
-        print(f"No match found")
-    else:
-        template = cluster.get_template()
-        print(f"Matched template #{cluster.cluster_id}: {template}")
-        print(f"Parameters: {template_miner.get_parameter_list(template, log_line)}")
+sys.stdout = original_stdout
+
+file.close()
+result_file.close()
+
+# Not using for now
+# print(f"Starting inference mode, matching to pre-trained clusters. Input log lines or 'q' to finish")
+# while True:
+#     log_line = input("> ")
+#     if log_line == 'q':
+#         break
+#     cluster = template_miner.match(log_line)
+#     if cluster is None:
+#         print(f"No match found")
+#     else:
+#         template = cluster.get_template()
+#         print(f"Matched template #{cluster.cluster_id}: {template}")
+#         print(f"Parameters: {template_miner.get_parameter_list(template, log_line)}")
