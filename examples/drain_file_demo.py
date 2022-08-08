@@ -69,10 +69,15 @@ sys.stdout = result_file
 for log_line in log_lines:
     result = template_miner.add_log_message(log_line)
     result_json = json.dumps(result)
+    # print(result_json)
+    cluster_id = json.loads(result_json)["cluster_id"]
+    print("Cluster: ", end = '')
+    print(cluster_id)
     print(result_json)
-    template = result["template_mined"]
-    params = template_miner.extract_parameters(template, log_line)
-    print("Parameters: " + str(params))
+    print("-----------------------------------------------")
+    # template = result["template_mined"]
+    # params = template_miner.extract_parameters(template, log_line)
+    # print("Parameters: " + str(params))
 
 print("Training done. Mined clusters:")
 for cluster in template_miner.drain.clusters:
