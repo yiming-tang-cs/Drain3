@@ -57,7 +57,9 @@ while not os.path.exists(file_path):
 ###### create result file for printing
 directory_path = file_path[0:file_path.rfind('/')]
 result_file = open(directory_path + "/results.txt", "w")
+id_results_file = open(directory_path + "/id_results.txt", "w")
 print("Create result file: " + directory_path + "/results.txt")
+print("Create result file: " + directory_path + "/id_results.txt")
 
 ##### read file content
 file = open(file_path, "r")
@@ -75,18 +77,20 @@ for log_line in log_lines:
     print(cluster_id)
     print(result_json)
     print("-----------------------------------------------")
+    id_results_file.write(str(cluster_id) + "\n")
     # template = result["template_mined"]
     # params = template_miner.extract_parameters(template, log_line)
     # print("Parameters: " + str(params))
 
-print("Training done. Mined clusters:")
-for cluster in template_miner.drain.clusters:
-    print(cluster)
+# print("Training done. Mined clusters:")
+# for cluster in template_miner.drain.clusters:
+#     print(cluster)
 
 sys.stdout = original_stdout
 
 file.close()
 result_file.close()
+id_results_file.close()
 
 # Not using for now
 # print(f"Starting inference mode, matching to pre-trained clusters. Input log lines or 'q' to finish")
